@@ -3,6 +3,7 @@ package rocks.zipcode.textedit;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,8 @@ public final class ZipEdit extends JFrame implements ActionListener{
     private JTextArea area;
     private JFrame frame;
     private String filename = "untitled";
+    JScrollPane scrollPane;
+
     public ZipEdit() {  }
 
     public static void main(String[] args) {
@@ -44,10 +47,15 @@ public final class ZipEdit extends JFrame implements ActionListener{
         //area.setBorder(blackline);
         area.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         area.setText("");
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(area);
         frame.setLocationRelativeTo(null);
         frame.setSize(640, 480);
+
+//        scrollPane = new JScrollPane(area);
+//        this.add(scrollPane);
 
         // Build the menu
         JMenuBar menu_main = new JMenuBar();
@@ -147,6 +155,22 @@ public final class ZipEdit extends JFrame implements ActionListener{
         } else if (ae.equals("Quit")) {
             System.exit(0);
         }
+        else if (ae.equals("Copy")) {
+            Action copy = new DefaultEditorKit.CopyAction();
+            copy.putValue(Action.NAME, "Copy");
+        }
+        else if (ae.equals("Cut")) {
+            Action cut = new DefaultEditorKit.CutAction();
+            String selected = area.getSelectedText();
+            area.replaceRange("", area.getSelectionStart(), area.getSelectionEnd());
+            cut.putValue(Action.NAME, "Cut");
+
+        }
+        else if (ae.equals("Paste")) {
+//            area.replaceRange(selected, );
+        }
+
+
         else if (ae.equals("Find")) {
             System.exit(0);
         }
