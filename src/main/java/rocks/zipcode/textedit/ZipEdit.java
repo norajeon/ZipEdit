@@ -156,23 +156,27 @@ public final class ZipEdit extends JFrame implements ActionListener{
             System.exit(0);
         }
         else if (ae.equals("Copy")) {
-            Action copy = new DefaultEditorKit.CopyAction();
-            copy.putValue(Action.NAME, "Copy");
+//            Action copy = new DefaultEditorKit.CopyAction();
+//            copy.putValue(Action.NAME, "Copy");
+
+            area.copy();
         }
         else if (ae.equals("Cut")) {
-            Action cut = new DefaultEditorKit.CutAction();
-            String selected = area.getSelectedText();
-            area.replaceRange("", area.getSelectionStart(), area.getSelectionEnd());
-            cut.putValue(Action.NAME, "Cut");
+//            Action cut = new DefaultEditorKit.CutAction();
+//            String selected = area.getSelectedText();
+//            area.replaceRange("", area.getSelectionStart(), area.getSelectionEnd());
+//            cut.putValue(Action.NAME, "Cut");
+            area.cut();
 
         }
         else if (ae.equals("Paste")) {
 //            area.replaceRange(selected, );
+            area.paste();
         }
 
 
         else if (ae.equals("Find")) {
-            System.exit(0);
+
         }
     }
 }
