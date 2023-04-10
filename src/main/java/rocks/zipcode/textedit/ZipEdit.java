@@ -2,8 +2,10 @@ package rocks.zipcode.textedit;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,12 +14,16 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class ZipEdit extends JFrame implements ActionListener{
-    private JTextArea area;
+    private JTextArea area1;
+
     private JFrame frame;
     private String filename = "untitled";
     JScrollPane scrollPane;
@@ -31,6 +37,8 @@ public final class ZipEdit extends JFrame implements ActionListener{
 
 
     public void run() {
+
+
         frame = new JFrame(frameTitle());
 
         // Set the look-and-feel (LNF) of the application
@@ -42,17 +50,37 @@ public final class ZipEdit extends JFrame implements ActionListener{
         }
 
         // Set attributes of the app window
-        area = new JTextArea();
-        //Border blackline = BorderFactory.createLineBorder(Color.black);
-        //area.setBorder(blackline);
-        area.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        area.setText("");
-        area.setLineWrap(true);
-        area.setWrapStyleWord(true);
+        area1 = new JTextArea();
+        area1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        area1.setText("");
+        area1.setBackground(Color.black);
+        area1.setForeground(Color.white);
+        area1.setLineWrap(true);
+        area1.setWrapStyleWord(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(area);
+        frame.add(area1);
+
         frame.setLocationRelativeTo(null);
         frame.setSize(640, 480);
+
+        JTabbedPane tab1 = new JTabbedPane();
+
+
+        //tried to add multiple tabs, but unable to add textarea
+        JPanel label1 = new JPanel();
+        label1.setBackground(Color.black);
+
+        JPanel label2 = new JPanel();
+
+        JPanel label3 = new JPanel();
+
+
+        tab1.add("Tabs 1", label1);
+        tab1.add("Tabs 2", label2);
+        tab1.add("Tabs 3", label3);
+
+        this.add(tab1);
+
 
 //        scrollPane = new JScrollPane(area);
 //        this.add(scrollPane);
@@ -129,19 +157,42 @@ public final class ZipEdit extends JFrame implements ActionListener{
                         String line = scan.nextLine() + "\n";
                         ingest = ingest + line;
                     }
-                    area.setText(ingest);
+                    area1.setText(ingest);
                 }
                 catch ( FileNotFoundException ex) { ex.printStackTrace(); }
             }
             // SAVE
         } else if (ae.equals("Save")) {
-            returnValue = jfc.showSaveDialog(null);
+
+            JFileChooser fileChooser = new JFileChooser();
+//            FileNameExtensionFilter filter = new FileNameExtensionFilter("txt");
+//            fileChooser.addChoosableFileFilter(filter);
+//            fileChooser.setFileFilter(filter);
             this.filename = jfc.getSelectedFile().getName();
             this.frame.setTitle(this.frameTitle());
+            int option = fileChooser.showSaveDialog(this);
+            if (option == JFileChooser.APPROVE_OPTION) {
+                filename = fileChooser.getSelectedFile().getName();
+                if (!filename.endsWith(".txt")) {
+                    filename = filename + ".txt";
+
+                }
+
+
+
+//            if (this.filename != jfc.getSelectedFile().getName()) {
+//                int returnVa = jfc.showSaveDialog(null);
+//                if(returnVa == JFileChooser.APPROVE_OPTION) {
+//                    JFileChooser files = new JFileChooser(".");
+//                    files.setMultiSelectionEnabled(true);
+//
+//                }
+            }
+
             try {
                 File f = new File(jfc.getSelectedFile().getAbsolutePath());
                 FileWriter out = new FileWriter(f);
-                out.write(area.getText());
+                out.write(area1.getText());
                 out.close();
             } catch (FileNotFoundException ex) {
                 Component f = null;
@@ -151,31 +202,32 @@ public final class ZipEdit extends JFrame implements ActionListener{
                 JOptionPane.showMessageDialog(f,"Error.");
             }
         } else if (ae.equals("New")) {
-            area.setText("");
+            area1.setText("");
         } else if (ae.equals("Quit")) {
             System.exit(0);
         }
         else if (ae.equals("Copy")) {
-//            Action copy = new DefaultEditorKit.CopyAction();
-//            copy.putValue(Action.NAME, "Copy");
 
-            area.copy();
+
+            area1.copy();
         }
         else if (ae.equals("Cut")) {
-//            Action cut = new DefaultEditorKit.CutAction();
-//            String selected = area.getSelectedText();
-//            area.replaceRange("", area.getSelectionStart(), area.getSelectionEnd());
-//            cut.putValue(Action.NAME, "Cut");
-            area.cut();
+
+            area1.cut();
 
         }
         else if (ae.equals("Paste")) {
 //            area.replaceRange(selected, );
-            area.paste();
+            area1.paste();
         }
 
 
         else if (ae.equals("Find")) {
+            String finding = JOptionPane.showInputDialog(this, "Find: ");
+            if (finding == null) {
+                System.out.println("Invalid.");
+            }
+
 
         }
     }
